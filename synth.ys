@@ -1,0 +1,7 @@
+read_verilog -sv cpu_top.sv regfile.sv alu.sv imem.sv dmem.sv if_id_reg.sv ex_wb_reg.sv decoder.sv hazard_unit.sv
+
+synth -top cpu_top
+
+# map to generic gates
+abc 
+stat
