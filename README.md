@@ -141,6 +141,18 @@ set a 32 bit output for the pc
 set a 32 bit output for the instruction 
 set an output for the valid flag.
 
+create a local parameter, a 32bit number of 0s to represent no operation 
+during the positive edge of the clock or negative edge of the reset:
+
+if reset is low, set the pc output to 0, set the isntruction output to the no operation param, and set the valid output flag to 0, 
+
+if flush is high, then do the same thing
+
+if the stall flag is low, then we know that this stage should act as a typcall fetch instruction stage, so set the output pc to the input pc, set the output instruction to the input instruciton, and set the valid output flag to its input.
+
+
+
+
 
 
 
