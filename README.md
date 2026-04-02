@@ -82,6 +82,54 @@ We also have a write data inputed at this index in memory at the posedge of the 
 
 ______________________________________________________________________________________________
 
+ex_wb_reg.sv
+
+set input for clock
+set input for rst_n, meaning reset on a negative edge
+input for a flush flag, meaning get rid of any output, necessary if there was a stall in the fetch stage do to forawrding
+set input for a valid flag, necessary to insure that if we were to halt the program, an invalid flag is carried throughout the pipeline
+set an input for write enable, which would be propagated to the reg file
+set a 5 bit input for the destination register, set an input for write data, and set an input for a halt flag.
+although these flags and inputs might nor be needed in this stage, they are needed here so they can travel through the pipeline for where they are needed.
+
+set an output for a valid flag
+set an putput for the write enable flag
+set an output for the 5 bit destination register
+set an output for the 32 bit write data
+set an output for the halt flag
+
+have logic that runs on the positve edge of the clock or negative edge fo the rst_n (meaning it is active low) 
+if rstn is active low, set out valid to 0 so future stages know do disregard upcomming data, set the write enable flag to 0, set the out regeister to a 5 bit number 0, set an the output write data to a 32 bit number 0, and set the out halt to 0.
+
+if flush is active, set out valid to 0, set write enable to 0, set destination register to a 5 bit number 0, set output write data to a 32 bit 0 value, and set the out halt to 0, so the same as reset
+
+else, this is a good stage execution, so transisiton all input values to their respective outputs 
+_____________________________________________________________________________________________
+
+hazard_unit.sv
+
+set an input for if the fetch stage was valid
+set an input for if the first and second source register were used
+set an inputs for for the 5 bit first and second source registers
+set an input for if the execution stage is loading a word
+set a 5 bit input for the execution stages destination register file
+set an input for if the writeback is valid
+set an input for the write back write enable 
+set an input for the 5 bit write back destination register
+
+set an output for a fetch stall flag, 
+set an output for a execute bubble flag,
+set an output for a foward A flag and a forward B flag
+
+if any of these input changes, intialize the bubble and stall flags to 0.
+if the fetch instruciton is valid, and the load word flag is valid, and the destination register is not 0, we have that as always 0, then we would then want to ensure that the first or second source register is of the fetch is equal to the destination register in the write back, as that would mean forwarding should occur. If one of them is equal, turn on the stall flag and theh bubble flag, so that the instruciton stage waits for the value to be written to the register file before it is used, and the buble flag tells nullifiles whatever is in the execute stage.
+
+also at any input change initialize the forward flags to 0. Then check that the write back stage is valid, the write enable flag is valid, and the write back destination register is 0, and that the write back destination register is equal to the either the first or second source register. If either is true, that respective forward flag is turned on, which will allow the value in the wb stage to be written to that register, so we only have to stall a stage as opposed to having broken logic.
+
+
+
+
+
 
 
 
