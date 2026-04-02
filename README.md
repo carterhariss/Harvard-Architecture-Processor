@@ -126,6 +126,23 @@ if the fetch instruciton is valid, and the load word flag is valid, and the dest
 
 also at any input change initialize the forward flags to 0. Then check that the write back stage is valid, the write enable flag is valid, and the write back destination register is 0, and that the write back destination register is equal to the either the first or second source register. If either is true, that respective forward flag is turned on, which will allow the value in the wb stage to be written to that register, so we only have to stall a stage as opposed to having broken logic.
 
+__________________________________________________________________________________________
+
+if_id_reg.sv
+
+set an input for clock
+set an input for reset (active low)
+set an input for stall flag, which we use if the hazard module notes one insturction is dependent on another
+set an input flag for flush
+set a 32 bit input for the current pc
+set a 32 bit input for the current instructon 
+set an input for a valid flag
+set a 32 bit output for the pc 
+set a 32 bit output for the instruction 
+set an output for the valid flag.
+
+
+
 
 
 
