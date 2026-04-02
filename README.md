@@ -150,6 +150,43 @@ if flush is high, then do the same thing
 
 if the stall flag is low, then we know that this stage should act as a typcall fetch instruction stage, so set the output pc to the input pc, set the output instruction to the input instruciton, and set the valid output flag to its input.
 
+__________________________________________________________________________________________________________________
+
+
+imem.sv 
+
+create parameters for the word capacity in memory, which is 1024
+create a parameter for the memory file, which is defaulted to nothign 
+
+set an input of a 32 bit address
+set and output of a 32 bit instruction.
+
+create a memory array, which would be 1024 32 bit elements
+
+
+similar to dmem, create an index variable, that would be 10 bit number representing every element in memory.
+assing to the output instruction the value in memory corresponding to the input address that was word alligned and truncated into the index
+initialize all instructions to hold 0
+if the memory file exists, read the file into memory 
+
+__________________________________________________________________________________________________________________
+
+program.hex
+
+holds the 32 bit instruction I used to test functionality
+
+__________________________________________________________________________________________________________________
+
+regfile.sv
+
+set parameters for the bit size of each register, and number of registers, both are defaulted to 32.
+
+set an input for clock
+set an input for a write flag
+set an input for the write address, which would be the cieling of the log of base 2 of the amount of registers, so that every register can be represented by a 5 bit number, similar to dmem and imem.
+set an input for the write data, which would be 32 bits
+set inputs for the two read adresses, which are derived with the same process as the write address
+set two outputs for the 32 bit read data.
 
 
 
