@@ -188,7 +188,27 @@ set an input for the write data, which would be 32 bits
 set inputs for the two read adresses, which are derived with the same process as the write address
 set two outputs for the 32 bit read data.
 
+create an array for register values. they are 32 bits and go up to 32 registers on default 
 
+initialize all the registers to 0. 
+
+have combinational logic running, setting read data one equal to either 0, if the read addres is 0 (register 0 always holds 0), otherwise whatever is indexed in memory at that read address
+do the same thing for the second read data. We have a register designated for 0, so we don't have to create a use instruction 
+
+at the positve edge of the clock if write enable is high and the write address is not equal to 0, since we cant write to the 0th register, then we write to that register in memory (indexed by the write address), the write data.
+
+__________________________________________________________________________________________________________________
+
+cpu_top.sv
+
+set parameters for the amount of words in memory for instruction and data, both defaulted to 1024
+set a parameter for the instruction memory file where we will put the instruciton defaulted to ""
+set an input for clock, reset, and an output for a halted flag. We need this for our testbench, so we know when to stop.
+
+The first part of this top file is to wire the istruction fetch and calculate PC
+set 32 bit values for current and next pc
+set a 32 bit number for the instruction fetched
+set flags for stall, flush, if a branch is taken, 32 bit branch target.
 
 
 
