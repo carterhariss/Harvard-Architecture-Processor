@@ -240,6 +240,38 @@ set a flag for write enable, a 5 bit write address, 32 bit write data, and 2 32 
 
 use these along with clock and the source registers in the instance creation of the regfile module, with the two reads as the output. the write capabilities here are going to be utilized during the writeback stage.
 
+now we can create connections for a flag signaling a valid wb stage, write enable, a 5 bit desitnation register a 32 bit write data, and a halt flag. now the reason we created new destination register, data, and write enable is because we only want write enable to be on if the write back stage is valid. for the desitnation register value and the write data, we differentiate these from the register files' to represent different stages and avoid confusion.
+
+we also create flags for a bubble in the execution stage, as well as if a foward of the 1st or second operand is necessary 
+
+now we call a hazard_unit unit inputs with valid fetch flag, both source registers, their flags, a load word flag (gaurded with a valid fetch flag), as well as the wb valid flag, write enable flag, and destination register (of the writeback stage).
+
+There is also going to be outputs for the stall of the fetch stage, bubble of the execution stage, adn flags for forwding A and B. This is because this instance checks if the register in the fetch stage relies on a previously loaded word, currently in the writeback stage
+
+now we make 32 bit operands for A and B. We create two that don't take into account forwarding so we can use a ternary operation down the line to find what the actual operands are
+
+we assign the raw operands to the reads from the register file
+
+and we assign the actual operands to a ternary expression between the respective forward flag, what the writeback data would be if there is a forward, and the raw operand
+
+and since the B operand bits can also be used as an immediate value, determined by the decoder, we also do a ternary operation with the is_imm flag, the B operand, and the 32 bit immediate value
+
+Now we are onto the ALU part 
+
+we already have operands annd know what operation we are doing, given the alu_op. We also need a 32 bit value for the output as well as a zero. The zero is not actually used, but I put it there for future optmizaition, because I could have my BEQ and BNE utilize the ALU to see if a branch is necessary or not. 
+
+After this we run and instance of our dynamic memory module, with the inputs of clock, write enable (which is gaurded by the valid fetch flag, a store word flag, and a low bubble flag), write data, which would bre regB, housing the immediate 32bit value, and the read output.
+
+then we execute out branch logic. Basically, we ensure that there is a branch with the garud of a valid fetch adn no bubble. then we calculate if the branch should be taken or not, depending on the type of branch we have. This branch flag is routed back to the fetch instruction, and the branch target is update with the offest of the immediate value.
+Because the fetch could be initially incorrect, as it precomputed a simple pc increment, we send a flush signal to reset the stages, if a branch is taken.
+
+
+
+
+
+
+
+
 
 
 
