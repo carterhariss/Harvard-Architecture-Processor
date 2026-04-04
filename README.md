@@ -215,7 +215,32 @@ else if there is no stall, set the the current instruction to the next instructi
 
 also have combinational logic running, so if a branch is taken, set the next isntruction to the branch target value. otherwise set it equal to the current instruction + 4
 
-call an instance of the instruction memory with the afformentioned parameter values, with the current instruction as the input address and the fetched instruciton as the output.
+call an instance of the instruction memory with the afformentioned parameter values, with the current instruction as the input address and the fetched instruction as the output.
+
+set a 32 bit vlaue for the pc in the fetch stage and the instrction
+set a flag for if the fetch stage is valid. 
+then call an instance for the fetch stage, with inputs of clock, reset, stall, flush, pc, instruction, and 1 to represent a valid fetch. have outputs for pc, instruction and valid.
+
+additionally, we create 5 bit values for source register 1 and 2, and a destination register
+create flags for if these source registers are used 
+create a flag for if an immediate value is used
+create a 32 bit value for a 32 bit immediate valu e
+create a 3 bit vallue for the alu op code
+create a flag for write enable
+create flags for loading and storing words
+create flags for branch and its type (BEQ and BNE)
+create a jump flag
+create a 32 bit jump target ( still haven't implemented this)
+create a halt flag
+
+we use all these values as outputs into a decoder instance, with the instruction as an input, propogated from the fetch instruction.
+
+now we need to take what we've gained from decoder and find what registers we need
+set a flag for write enable, a 5 bit write address, 32 bit write data, and 2 32 bit read data
+
+use these along with clock and the source registers in the instance creation of the regfile module, with the two reads as the output. the write capabilities here are going to be utilized during the writeback stage.
+
+
 
 
 
