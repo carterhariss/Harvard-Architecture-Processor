@@ -74,6 +74,8 @@ we have an input clock, write enable, at 32 bit input of the addr, which is byte
 
 create a memory array, which contains 1024 words. we intiliaze the memory to hold zeros to avoid getting garbage values. We also set the first word to 6 to test loads.
 
+
+
 we will also create an index using the clog2 method, which takes the log of a value. We take the log of the depth of words so this index can map to every possible address. In this case, our index is a 10 bit number, meaning there are 2^10 possible combinations, which is the amount of words we have.
 
 Right now, addr is a 32 bit value. we need to map this value to the index so we can access the word alligned memory. Since the address is byte addressable, dividing it by 4 ( 4 bytes in a word) will give of a word alligned address. so we assign the index to this address that has been shifted right by 2 and truncated to 10 bits. We then use this index to access memory and store the value in the read data ouput. 
@@ -264,6 +266,27 @@ After this we run and instance of our dynamic memory module, with the inputs of 
 
 then we execute out branch logic. Basically, we ensure that there is a branch with the garud of a valid fetch adn no bubble. then we calculate if the branch should be taken or not, depending on the type of branch we have. This branch flag is routed back to the fetch instruction, and the branch target is update with the offest of the immediate value.
 Because the fetch could be initially incorrect, as it precomputed a simple pc increment, we send a flush signal to reset the stages, if a branch is taken.
+
+set a 32 bit value the result of the execute stage, and a ternary operator on the load flag that is connected to the dynamic memory read data or the output of the ALU
+
+set a 5 bit value to the destination register of the insturction in the execute stage, and assign it to either destination regiester of the r-type operation, which we found in the decoding stage, or the five btis of the instruciton for rs2, which is the "desitnation register" used for loads
+
+create a flag for if the execution stage is valid and assign it to the valid flag of the fetch stage anded with the negated bubble flag 
+
+then call the execute/wb instance with clk, reset, flush, ex valid, we enable (anded ex valid and we enable from decoder), ex destination register, write data, from the result of either the alu or a load, and a halt signal ( ex_valid and halt anded together, as inputs
+for outputs we get an output valid flag, a write enable, a writeback destnation register, writeback data, and an output halt signal.
+
+Assign the register file write enable with the write back write enable flag, and we and it with the valid flag and the comparison between the destination and 0 (we dont want to write a value to the 0th register)
+
+assing to the register files write addres the desitantion register from the writeback
+
+assign the register file data to the writeback data
+
+assign the halted flag to the the writeback valid and halt flags anded together 
+
+__________________________________________________________________________________________________________________
+
+tb_cpu.sv
 
 
 
