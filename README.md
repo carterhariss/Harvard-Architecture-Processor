@@ -210,6 +210,14 @@ set 32 bit values for current and next pc
 set a 32 bit number for the instruction fetched
 set flags for stall, flush, if a branch is taken, 32 bit branch target.
 
+at the posedg eof clock or negedge of reset, if reset is low, set the pc to a 32 bit 0
+else if there is no stall, set the the current instruction to the next instruction
+
+also have combinational logic running, so if a branch is taken, set the next isntruction to the branch target value. otherwise set it equal to the current instruction + 4
+
+call an instance of the instruction memory with the afformentioned parameter values, with the current instruction as the input address and the fetched instruciton as the output.
+
+
 
 
 
